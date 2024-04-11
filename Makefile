@@ -130,7 +130,7 @@ SYCL_USE_INTEL_ONEAPI := true
 # Intel GPU ids
 OCLOC_IDS := tgllp acm_g10 pvc
 
-ifdef SYCL_USE_INTEL_ONEAPI
+ifeq (SYCL_USE_INTEL_ONEAPI, true)
   ONEAPI_BASE := /opt/intel/oneapi
 
   ifeq ($(wildcard $(ONEAPI_BASE)),)
