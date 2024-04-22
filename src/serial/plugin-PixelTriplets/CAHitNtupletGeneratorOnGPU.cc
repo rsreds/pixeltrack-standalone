@@ -17,6 +17,35 @@ namespace {
   T sqr(T x) {
     return x * x;
   }
+  
+  int16_t * makePhiCuts(){
+    constexpr int nPairs = 13 + 2 + 4;
+
+    constexpr int16_t phi0p05 = 522;  // round(521.52189...) = phi2short(0.05);
+    constexpr int16_t phi0p06 = 626;  // round(625.82270...) = phi2short(0.06);
+    constexpr int16_t phi0p07 = 730;  // round(730.12648...) = phi2short(0.07);
+
+    return new int16_t[nPairs]{ phi0p05,
+                                phi0p07,
+                                phi0p07,
+                                phi0p05,
+                                phi0p06,
+                                phi0p06,
+                                phi0p05,
+                                phi0p05,
+                                phi0p06,
+                                phi0p06,
+                                phi0p06,
+                                phi0p05,
+                                phi0p05,
+                                phi0p05,
+                                phi0p05,
+                                phi0p05,
+                                phi0p05,
+                                phi0p05,
+                                phi0p05};
+    //   phi0p07, phi0p07, phi0p06,phi0p06, phi0p06,phi0p06};  // relaxed cuts
+  }
 
   cAHitNtupletGenerator::QualityCuts makeQualityCuts() {
     auto coeff = std::vector<double>{0.68177776, 0.74609577, -0.08035491, 0.00315399};  // chi2Coeff
@@ -62,7 +91,9 @@ CAHitNtupletGeneratorOnGPU::CAHitNtupletGeneratorOnGPU(edm::ProductRegistry& reg
                0.0328407224959,   // hardCurvCut
                0.15000000596,     // dcaCutInnerTriplet
                0.25,              // dcaCutOuterTriplet
-               makeQualityCuts()) {
+               makeQualityCuts(), // QualityCuts
+               makePhiCuts())     // phiCuts
+               {
 #ifdef DUMP_GPU_TK_TUPLES
   printf("TK: %s %s % %s %s %s %s %s %s %s %s %s %s %s %s %s\n",
          "tid",
