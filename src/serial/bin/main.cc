@@ -48,6 +48,7 @@ int main(int argc, char** argv) {
   bool validation = false;
   bool histogram = false;
   bool empty = false;
+  bool paramsFromFile = false;
   for (auto i = args.begin() + 1, e = args.end(); i != e; ++i) {
     if (*i == "-h" or *i == "--help") {
       print_help(args.front());
@@ -76,6 +77,8 @@ int main(int argc, char** argv) {
       histogram = true;
     } else if (*i == "--empty") {
       empty = true;
+    } else if (*i == "--paramsFromFile") {
+      paramsFromFile = true;
     } else {
       std::cout << "Invalid parameter " << *i << std::endl << std::endl;
       print_help(args.front());
@@ -105,11 +108,18 @@ int main(int argc, char** argv) {
   std::vector<std::string> esmodules;
   if (not empty) {
     edmodules = {
-        "BeamSpotToPOD", "SiPixelRawToClusterCUDA", "SiPixelRecHitCUDA", "CAHitNtupletCUDA", "PixelVertexProducerCUDA"};
+        "BeamSpotToPOD", "SiPixelRawToClusterCUDA", "SiPixelRecHitCUDA"};
     esmodules = {"BeamSpotESProducer",
                  "SiPixelFedCablingMapGPUWrapperESProducer",
                  "SiPixelGainCalibrationForHLTGPUESProducer",
                  "PixelCPEFastESProducer"};
+    if (paramsFromFile){
+      edmodules.emplace_back("CAHitNtupletCUDAfromFile");
+      edmodules.emplace_back("PixelVertexProducerCUDA");
+    } else {
+      edmodules.emplace_back("CAHitNtupletCUDA");
+      edmodules.emplace_back("PixelVertexProducerCUDA");
+    }
     if (validation) {
       edmodules.emplace_back("CountValidator");
     }
